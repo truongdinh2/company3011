@@ -1,21 +1,15 @@
-import React, {useEffect, useState} from 'react';
-import PropTypes from 'prop-types';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableFooter from '@material-ui/core/TableFooter';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import TablePagination from '@material-ui/core/TablePagination';
+import { DeleteOutlined } from '@material-ui/icons';
+import EditIcon from '@material-ui/icons/Edit';
 import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
-import { TableHead } from '@material-ui/core';
-import axios from 'axios'
+import axios from 'axios';
+import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
 const useStyles1 = makeStyles((theme) => ({
   root: {
     flexShrink: 0,
@@ -27,7 +21,7 @@ function TablePaginationActions(props) {
   const classes = useStyles1();
   const theme = useTheme();
   const { count, page, rowsPerPage, onChangePage } = props;
- 
+
   const handleFirstPageButtonClick = (event) => {
     onChangePage(event, 0);
   };
@@ -43,7 +37,7 @@ function TablePaginationActions(props) {
   const handleLastPageButtonClick = (event) => {
     onChangePage(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
   };
-  
+
   return (
     <div className={classes.root}>
       <IconButton
@@ -91,22 +85,29 @@ const useStyles2 = makeStyles({
     minWidth: 500,
   },
 });
- 
+
 export default function CustomPaginationActionsTable(props) {
   const classes = useStyles2();
+  const strKey = props.valueSearch;
+  const arrKey = []
+  const [valueSearch, setValueSearch] = useState('');
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [users,setUsers] = useState([])
-  useEffect(()=>{
-    axios.get('https://5fbb65b4c09c200016d406f6.mockapi.io/info').then(res =>{
+  const [users, setUsers] = useState([])
+  useEffect(() => {
+    setValueSearch(strKey)
+  })
+  useEffect(() => {
+    axios.get('https://5fbb65b4c09c200016d406f6.mockapi.io/info').then(res => {
       // console.log(res.data)
-      if(res){
+      if (res) {
         setUsers(res.data)
       }
-    }).catch(err =>{
+    }).catch(err => {
       console.log(err)
     })
-  },[props.isEdit])
+    console.log('GetData')
+  }, [props.isEdit])
   const rows = users.sort((a, b) => (a.calories < b.calories ? -1 : 1));
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
@@ -119,60 +120,89 @@ export default function CustomPaginationActionsTable(props) {
     setPage(0);
   };
   const handleEdit = (row) => {
-    console.log(row)
+    // console.log(row)
     props.idVal(row)
     // setUsers(users.id)
     // props.getUsers(users)
-  } 
+  }
+  const handleDelete = async id => {
+    console.log(id)
+    fetch(`https://5fbb65b4c09c200016d406f6.mockapi.io/info/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      }
+    }).then(() => {
+      props.onDelete();
+      console.log('Delete')
+    });
+  }
+// console.log(props.valueSearch)
+ rows.map((key)=>{
+  var index ;
+  index = key.name.indexOf(valueSearch);
+  if(index!== -1) {
+    arrKey.push(key)
+  }
+  return arrKey;
+})
+// console.log(arrKey)
+// console.log(rows)
+// console.log(valueSearch)
+// console.log(index)
+// console.log(rows.map((key)=>{
+//   key.name.indexOf(valueSearch)
+// }))
   return (
-    <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="custom pagination table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell>Date of birth</TableCell>
-            <TableCell>Day in</TableCell>
-            <TableCell>Adress</TableCell>
-            <TableCell>Salary</TableCell>
-            <TableCell>Action</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
+    
+      <table >
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Email</th>
+            <th>Website</th>
+            <th>Introduction</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
           {(rowsPerPage > 0
-            ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : rows
+            ? arrKey.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            : arrKey
           ).map((row) => (
-            <TableRow key={row.name}>
-              <TableCell component="th" scope="row">
+            <tr key={row.name}>
+              <td component="th" scope="row">
                 {row.name}
-              </TableCell>
-              <TableCell style={{  }} >
+              </td>
+              <td style={{}} >
                 {row.age}
-              </TableCell>
-              <TableCell style={{  }} >
+              </td>
+              <td style={{}} >
                 {row.email}
-              </TableCell>
-              <TableCell>{row.website}</TableCell>
-              <TableCell>{row.introduction}</TableCell>
-              <TableCell>
-                  <a href style={{color:"blue", textDecoration:"underLine", cursor:"pointer"}}
-                     onClick={()=>handleEdit(row)}>
-                    Edit
+              </td>
+              <td>{row.website}</td>
+              <td>{row.introduction}</td>
+              <td>
+                <a href style={{ color: "blue", textDecoration: "underLine", cursor: "pointer" }}
+                  onClick={() => handleEdit(row)}
+                  >
+                  <EditIcon/>
                   </a>
-                  <br></br>
-                  <a href style={{color:"red", textDecoration:"underLine", cursor:"pointer"}}>Delete</a>
-              </TableCell>
-            </TableRow>
+                <a href style={{ color: "red", textDecoration: "underLine", cursor: "pointer" }}
+                  onClick={() => handleDelete(row.id)}
+                  ><DeleteOutlined /></a>
+              </td>
+            </tr>
           ))}
 
           {emptyRows > 0 && (
-            <TableRow style={{ height: 53 * emptyRows }}>
-              <TableCell colSpan={6} />
-            </TableRow>
+            <tr style={{ height: 53 * emptyRows }}>
+              <td colSpan={6} />
+            </tr>
           )}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
+        </tbody>
+          <tr className="page">
             <TablePagination
               rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
               colSpan={3}
@@ -187,9 +217,7 @@ export default function CustomPaginationActionsTable(props) {
               onChangeRowsPerPage={handleChangeRowsPerPage}
               ActionsComponent={TablePaginationActions}
             />
-          </TableRow>
-        </TableFooter>
-      </Table>
-    </TableContainer>
+          </tr>
+      </table>
   );
 }

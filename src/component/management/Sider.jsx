@@ -1,32 +1,34 @@
 import { Button } from '@material-ui/core';
 import { Col, Row } from 'antd';
-import React,{useState} from 'react';
+import React from 'react';
 
 function Sider(props) {
+    // const {name} = useParams();
+    // console.log(useParams())
     return (
-        <>
+        <div className="sid">
             <Row>
                 <Col>
-                    <Button>
-                        Home
+                    <Button className="btnS">
+                        Home 
                     </Button>
                 </Col>
             </Row>
             <Row>
                 <Col>
-                    <Button>
+                    <Button className="btnS">
                         Profile
                     </Button>
                 </Col>
             </Row>
             <Row>
                 <Col>
-                    <Button>
+                    <Button className="btnS">
                         Setting
                     </Button>
                 </Col>
             </Row>
-        </>
+        </div>
     );
 }
 

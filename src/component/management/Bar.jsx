@@ -1,11 +1,13 @@
-import { AppBar, Button, ButtonBase, IconButton, makeStyles, Toolbar, Typography } from '@material-ui/core';
+import { AppBar, Button, IconButton, makeStyles, Toolbar, Typography } from '@material-ui/core';
 import MenuSharpIcon from '@material-ui/icons/MenuSharp';
+import { Col, Row } from 'antd';
 import React, { useState } from 'react';
-import Home from './Home';
-import Sider from './Sider';
-import Seacrch from './Seacrch';
-import { Row, Col, } from 'antd';
+// import Video from '../'
+import Video from '../video/video.mp4';
 import Diaolog from './Dialog';
+import Home from './Home';
+import Seacrch from './Seacrch';
+import Sider from './Sider';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,26 +23,49 @@ const useStyles = makeStyles((theme) => ({
 
 function Bar(props) {
   const classes = useStyles();
+  const [isMenu, setIsMenu] = useState(false)
+  const [valueSearch, setValueSearch] = useState('')
+  const [checkEdit, setCheckEdit] = useState(false)
   const [open, setOpen] = useState(false)
-  const [isEdit,setIsEdit] = useState(false)
-  const [users,setUsers] = useState(null)
-  function checkData(){
+  const [isEdit, setIsEdit] = useState(false)
+  const [users, setUsers] = useState(null)
+  // const [idDel, setIdDel] = useState(null)
+  function checkData() {
     setIsEdit(!isEdit)
   }
-  function idVal(row,users) {
+  function idVal(row, users) {
     // console.log(idValue,users)
     setUsers(row)
     setOpen(true)
     // setUsers(users)
-    setIsEdit(false)
+    setCheckEdit(false)
   }
-  // console.log(users)
+  const getSave = () => {
+    setOpen(false);
+    setUsers(null)
+  }
+  console.log(isEdit, 'isedit')
+  // const getIdDel = (id) =>{
+  //   // console.log(id)
+  //   setIdDel(id)
+  // } 
+  // console.log(isEdit)
+  const onDelete = () => {
+    setIsEdit(!isEdit)
+  }
+  const valSearch = (key) => {
+    setValueSearch(key)
+  }
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+          <video className="video" src={Video} loop  autoPlay="true" muted />
+      <div className="modal2"></div>
+      <AppBar position="fixed">
         <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-            <MenuSharpIcon />
+          <IconButton edge="start" className={classes.menuButton}
+            color="inherit" aria-label="menu"
+          >
+            <MenuSharpIcon onClick={() => setIsMenu(!isMenu)} />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
             News
@@ -48,35 +73,56 @@ function Bar(props) {
           <Button color="inherit">Login</Button>
         </Toolbar>
       </AppBar>
-      <div style={{ marginTop: '50px' }}>
-        <h1>Welcqaome{ }</h1>
+      <div style={{ marginTop: '100px' }}>
         <Row>
-          
-          <Col span={11}>
-            <Seacrch />
-            {open && <Diaolog checkData={checkData} 
-            users={users} isEdit={isEdit}/>}
+          <Col md={4}>
+            {isMenu && <div className="sider"><Sider/></div>}
           </Col>
-          <Col span={13} >
-             <Button variant="contained" color="secondary" onClick={()=>{setOpen(!open);setIsEdit(true)}}>
-               Add employer
+          <Col md={20}>
+            <Row>
+              <Col  offset={8}>
+                <h1 style={{ height: '100px',fontSize:'30px', color:"white" }}>Welcome</h1>
+              </Col>
+            </Row>
+            <Row>
+              
+              <Col md={18}>
+                <div style={{ height: '100px' }}>
+                  <Seacrch valSearch={valSearch} />
+                </div>
+                {open && <div className="diolog">
+                  <Diaolog checkData={checkData}
+                    users={users} checkEdit={checkEdit}
+                    getSave={getSave} />
+                </div>}
+                {open && <div className="modal" onClick={() => { setOpen(!open) }}></div>}
+                {isMenu && <div className="modal" onClick={() => { setIsMenu(!isMenu) }}></div>}
+              </Col>
+              <Col md={6} >
+                <Button variant="contained" color="secondary"
+                  onClick={() => { setOpen(!open); setCheckEdit(true) }}>
+                  Add employer
              </Button>
+              </Col>
+            </Row>
+            <Row className="height">
+              {/* <Col span={4} >
+              </Col> */}
+              <Col span={21} >
+                <Home isEdit={isEdit} idVal={idVal}
+                  onDelete={onDelete}
+                  valueSearch={valueSearch}
+                // getIdDel={getIdDel}
+                />
+              </Col>
+              <Col span={3} >
+              </Col>
+            </Row>
           </Col>
         </Row>
-        <Row>
-          <Col span={4} >
-            <Sider/>
-          </Col>
-          <Col span={17} >
-            <Home isEdit={isEdit} idVal={idVal} />
-          </Col>
-          <Col span={3} >
-          </Col>
-          {/* <Col span={6} order={1}>
-            4 col-order-1
-          </Col> */}
-        </Row>
-        
+        {/* <Row style={{height:'100px'}}>
+
+        </Row> */}
       </div>
     </div>
   );

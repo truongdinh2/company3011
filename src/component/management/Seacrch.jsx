@@ -1,12 +1,12 @@
-import {  TextField } from '@material-ui/core';
 import React from 'react';
+// import {us} from 'react-router'
 
 function Seacrch(props) {
     return (
         <div>
-            <TextField
-                label="Search via Name"
-                variant="filled"
+            <input type="search" className="search"
+                placeholder="Search ..."
+                onChange={(e) => { props.valSearch(e.target.value) }}
             />
         </div>
     );
