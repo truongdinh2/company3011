@@ -7,6 +7,7 @@ import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
+import { message, Popconfirm } from 'antd';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
@@ -37,7 +38,6 @@ function TablePaginationActions(props) {
   const handleLastPageButtonClick = (event) => {
     onChangePage(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
   };
-
   return (
     <div className={classes.root}>
       <IconButton
@@ -67,33 +67,24 @@ function TablePaginationActions(props) {
     </div>
   );
 }
-
 TablePaginationActions.propTypes = {
   count: PropTypes.number.isRequired,
   onChangePage: PropTypes.func.isRequired,
   page: PropTypes.number.isRequired,
   rowsPerPage: PropTypes.number.isRequired,
 };
-
-// function createData(name, calories, fat) {
-//   return { name, calories, fat };
-// }
-
-
-const useStyles2 = makeStyles({
-  table: {
-    minWidth: 500,
-  },
-});
-
 export default function CustomPaginationActionsTable(props) {
-  const classes = useStyles2();
+  // const classes = useStyles2();
   const strKey = props.valueSearch;
   const arrKey = []
   const [valueSearch, setValueSearch] = useState('');
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [users, setUsers] = useState([])
+  const [users, setUsers] = useState([]);
+  const text = 'Are you sure to delete this task?';
+  const success = () => {
+    message.success('deleted sucessfully');
+  };
   useEffect(() => {
     setValueSearch(strKey)
   })
@@ -134,90 +125,91 @@ export default function CustomPaginationActionsTable(props) {
       }
     }).then(() => {
       props.onDelete();
-      console.log('Delete')
+      // console.log('Delete')
+      success()
     });
   }
-// console.log(props.valueSearch)
- rows.map((key)=>{
-  var index ;
-  index = key.name.indexOf(valueSearch);
-  if(index!== -1) {
-    arrKey.push(key)
+  // console.log(props.valueSearch)
+  rows.map((key) => {
+    var index;
+    index = key.name.indexOf(valueSearch);
+    if (index !== -1) {
+      arrKey.push(key)
+    }
+    return arrKey;
+  });
+  function confirm(id) {
+    message.info('Clicked on Yes.');
+    console.log(id)
+    handleDelete(id)
   }
-  return arrKey;
-})
-// console.log(arrKey)
-// console.log(rows)
-// console.log(valueSearch)
-// console.log(index)
-// console.log(rows.map((key)=>{
-//   key.name.indexOf(valueSearch)
-// }))
   return (
-    
-      <table >
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Age</th>
-            <th>Email</th>
-            <th>Website</th>
-            <th>Introduction</th>
-            <th>Action</th>
+    <table >
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Age</th>
+          <th>Email</th>
+          <th>Website</th>
+          <th>Introduction</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {(rowsPerPage > 0
+          ? arrKey.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+          : arrKey
+        ).map((row) => (
+          <tr key={row.name}>
+            <td component="th" >
+              {row.name}
+            </td>
+            <td style={{}} >
+              {row.age}
+            </td>
+            <td style={{}} >
+              {row.email}
+            </td>
+            <td>{row.website}</td>
+            <td>{row.introduction}</td>
+            <td>
+              <a href style={{ color: "blue", textDecoration: "underLine", cursor: "pointer" }}
+                onClick={() => handleEdit(row)}
+              >
+                <EditIcon />
+              </a>
+              <Popconfirm placement="topLeft" title={text} onConfirm={() => confirm(row.id)}
+                okText="Yes" cancelText="No"
+              >
+                <a href style={{ color: "red", textDecoration: "underLine", cursor: "pointer" }}>
+                  <DeleteOutlined /></a>
+              </Popconfirm>
+            </td>
           </tr>
-        </thead>
-        <tbody>
-          {(rowsPerPage > 0
-            ? arrKey.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : arrKey
-          ).map((row) => (
-            <tr key={row.name}>
-              <td component="th" scope="row">
-                {row.name}
-              </td>
-              <td style={{}} >
-                {row.age}
-              </td>
-              <td style={{}} >
-                {row.email}
-              </td>
-              <td>{row.website}</td>
-              <td>{row.introduction}</td>
-              <td>
-                <a href style={{ color: "blue", textDecoration: "underLine", cursor: "pointer" }}
-                  onClick={() => handleEdit(row)}
-                  >
-                  <EditIcon/>
-                  </a>
-                <a href style={{ color: "red", textDecoration: "underLine", cursor: "pointer" }}
-                  onClick={() => handleDelete(row.id)}
-                  ><DeleteOutlined /></a>
-              </td>
-            </tr>
-          ))}
+        ))}
 
-          {emptyRows > 0 && (
-            <tr style={{ height: 53 * emptyRows }}>
-              <td colSpan={6} />
-            </tr>
-          )}
-        </tbody>
-          <tr className="page">
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-              colSpan={3}
-              count={rows.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              SelectProps={{
-                inputProps: { 'aria-label': 'rows per page' },
-                native: true,
-              }}
-              onChangePage={handleChangePage}
-              onChangeRowsPerPage={handleChangeRowsPerPage}
-              ActionsComponent={TablePaginationActions}
-            />
+        {emptyRows > 0 && (
+          <tr style={{ height: 53 * emptyRows }}>
+            <td colSpan={6} />
           </tr>
-      </table>
+        )}
+      </tbody>
+      <tr className="page">
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+          colSpan={3}
+          count={rows.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          SelectProps={{
+            inputProps: { 'aria-label': 'rows per page' },
+            native: true,
+          }}
+          onChangePage={handleChangePage}
+          onChangeRowsPerPage={handleChangeRowsPerPage}
+          ActionsComponent={TablePaginationActions}
+        />
+      </tr>
+    </table>
   );
 }

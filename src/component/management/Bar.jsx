@@ -7,7 +7,10 @@ import Video from '../video/video.mp4';
 import Diaolog from './Dialog';
 import Home from './Home';
 import Seacrch from './Seacrch';
-import Sider from './Sider';
+// import Sider from './Sider';
+import { useAuth0 } from "@auth0/auth0-react";
+import LoginOutlined, { LogoutOutlined } from "@ant-design/icons";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,7 +24,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
+const LoginButton = () => {
+  const { loginWithRedirect } = useAuth0();
+
+  return (
+    <Button color="inherit" onClick={() => loginWithRedirect()}><span className="iconL"><LoginOutlined /></span>Log In</Button>);
+};
+
+const LogoutButton = () => {
+  const { logout } = useAuth0();
+  return (
+    <Button color="inherit" onClick={() => logout({ returnTo: window.location.origin })}>
+      <span className="iconL"><LogoutOutlined /></span>Log Out
+    </Button>
+  );
+};
+
 function Bar(props) {
+  const { user, isAuthenticated, isLoading } = useAuth0();
+
+
+
   const classes = useStyles();
   const [isMenu, setIsMenu] = useState(false)
   const [valueSearch, setValueSearch] = useState('')
@@ -37,7 +61,6 @@ function Bar(props) {
     // console.log(idValue,users)
     setUsers(row)
     setOpen(true)
-    // setUsers(users)
     setCheckEdit(false)
   }
   const getSave = () => {
@@ -45,21 +68,21 @@ function Bar(props) {
     setUsers(null)
   }
   console.log(isEdit, 'isedit')
-  // const getIdDel = (id) =>{
-  //   // console.log(id)
-  //   setIdDel(id)
-  // } 
-  // console.log(isEdit)
   const onDelete = () => {
     setIsEdit(!isEdit)
   }
   const valSearch = (key) => {
     setValueSearch(key)
   }
+  if (isLoading) {
+    return <div>Loading ...</div>
+  }
+  // console.log(isAuthenticated)
+  // console.log(user)
   return (
     <div className={classes.root}>
-          <video className="video" src={Video} loop  autoPlay="true" muted />
-      <div className="modal2"></div>
+      <video className="video" src={Video} loop autoPlay="true" muted />
+      {isAuthenticated && <div className="modal2"></div>}
       <AppBar position="fixed">
         <Toolbar>
           <IconButton edge="start" className={classes.menuButton}
@@ -70,25 +93,33 @@ function Bar(props) {
           <Typography variant="h6" className={classes.title}>
             News
           </Typography>
-          <Button color="inherit">Login</Button>
+          {isAuthenticated ? <LogoutButton /> : <LoginButton />}
         </Toolbar>
       </AppBar>
+
       <div style={{ marginTop: '100px' }}>
         <Row>
-          <Col md={4}>
-            {isMenu && <div className="sider"><Sider/></div>}
+          <Col md={4} xm={6}>
+            {isMenu && isAuthenticated ? <div className="sider">
+              <h2>infor của bạn đã bị hack </h2>
+              <p>tên bạn là: {user.family_name} 🐶</p>
+              <p>họ bạn là: {user.given_name}</p>
+              <p>quốc gia bạn là: {user.locale === 'vi' ? "Việt Nam  :))" : ''}</p>
+              <p>ảnh bạn là:  <img src={user.picture} alt="pic" /></p>
+            </div> : ''}
           </Col>
-          <Col md={20}>
-            <Row>
-              <Col  offset={8}>
-                <h1 style={{ height: '100px',fontSize:'30px', color:"white" }}>Welcome</h1>
-              </Col>
+          <Col md={20} xm={18}>
+            <Row >
+              <h1 className="titlte" style={{ margin: "auto" }}>Welcome
+                  <span >
+                  🐪🐪🐪  {isAuthenticated && user.family_name}😀👆️😧🖤❣️️🎧
+                  </span>
+              </h1>
             </Row>
             <Row>
-              
               <Col md={18}>
                 <div style={{ height: '100px' }}>
-                  <Seacrch valSearch={valSearch} />
+                  {isAuthenticated && <Seacrch valSearch={valSearch} />}
                 </div>
                 {open && <div className="diolog">
                   <Diaolog checkData={checkData}
@@ -99,21 +130,21 @@ function Bar(props) {
                 {isMenu && <div className="modal" onClick={() => { setIsMenu(!isMenu) }}></div>}
               </Col>
               <Col md={6} >
-                <Button variant="contained" color="secondary"
+                {isAuthenticated && <Button className="button__add" variant="contained"
                   onClick={() => { setOpen(!open); setCheckEdit(true) }}>
                   Add employer
-             </Button>
+             </Button>}
               </Col>
             </Row>
             <Row className="height">
               {/* <Col span={4} >
               </Col> */}
               <Col span={21} >
-                <Home isEdit={isEdit} idVal={idVal}
+                {isAuthenticated && <Home isEdit={isEdit} idVal={idVal}
                   onDelete={onDelete}
                   valueSearch={valueSearch}
                 // getIdDel={getIdDel}
-                />
+                />}
               </Col>
               <Col span={3} >
               </Col>

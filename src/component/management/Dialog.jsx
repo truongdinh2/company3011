@@ -1,5 +1,5 @@
 
-import { Form, Input, InputNumber, Button } from 'antd';
+import { Form, Input, InputNumber, Button, message } from 'antd';
 import { useEffect, useState } from 'react';
 
 const layout = {
@@ -40,10 +40,9 @@ const Diaolog = (props) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(values.user),
-      }).then(res => {
+      }).then(() => {
         props.checkData();
-        console.log('checkdata1')
-        alert('successed')
+        success()
       });
     } else {
       fetch(`https://5fbb65b4c09c200016d406f6.mockapi.io/info/${userEdits.id}`, {
@@ -54,16 +53,18 @@ const Diaolog = (props) => {
         body: JSON.stringify(values.user),
       }).then(res => {
         props.checkData();
-        console.log('checkdata')
-        setUserEdits(null)
-        console.log(userEdits)
-        alert('you edited successfully')
+        setUserEdits(null);
+        success();
+        // alert('hi')
       });
     }
-
+    success();
     props.getSave()
   };
-  // console.log(props.checkEdit,'props.checkEdit')
+
+  const success = () => {
+    message.success('done !');
+  };
   return (
     <Form {...layout} name="nest-messages" onFinish={onFinish}
       validateMessages={validateMessages}
@@ -81,10 +82,10 @@ const Diaolog = (props) => {
         label="Age" rules={[{ type: 'number', min: 0, max: 99 }, { required: true }]}>
         <InputNumber />
       </Form.Item>
-      <Form.Item name={['user', 'website']} label="Website">
+      <Form.Item name={['user', 'website']} label="Website" rules={[{ required: true }]}>
         <Input />
       </Form.Item>
-      <Form.Item name={['user', 'introduction']} label="Introduction">
+      <Form.Item name={['user', 'introduction']} label="Introduction" rules={[{ required: true }]}>
         <Input.TextArea />
       </Form.Item>
       <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
