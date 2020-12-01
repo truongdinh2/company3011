@@ -87,7 +87,7 @@ export default function CustomPaginationActionsTable(props) {
   };
   useEffect(() => {
     setValueSearch(strKey)
-  })
+  },[])
   useEffect(() => {
     axios.get('https://5fbb65b4c09c200016d406f6.mockapi.io/info').then(res => {
       // console.log(res.data)
@@ -194,22 +194,24 @@ export default function CustomPaginationActionsTable(props) {
           </tr>
         )}
       </tbody>
-      <tr className="page">
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-          colSpan={3}
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          SelectProps={{
-            inputProps: { 'aria-label': 'rows per page' },
-            native: true,
-          }}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
-          ActionsComponent={TablePaginationActions}
-        />
-      </tr>
+      <tfoot>
+        <tr className="page">
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+            colSpan={3}
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            SelectProps={{
+              inputProps: { 'aria-label': 'rows per page' },
+              native: true,
+            }}
+            onChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+            ActionsComponent={TablePaginationActions}
+          />
+        </tr>
+      </tfoot>
     </table>
   );
 }

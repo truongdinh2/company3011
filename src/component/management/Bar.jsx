@@ -151,6 +151,7 @@ function Bar(props) {
             </Row>
           </Col>
         </Row>
+        
         {/* <Row style={{height:'100px'}}>
 
         </Row> */}
