@@ -29,14 +29,14 @@ const LoginButton = () => {
   const { loginWithRedirect } = useAuth0();
 
   return (
-    <Button color="inherit" onClick={() => loginWithRedirect()}><span className="iconL"><LoginOutlined /></span>Log In</Button>);
+    <Button color="inherit" onClick={() => loginWithRedirect()}>Log In</Button>);
 };
 
 const LogoutButton = () => {
   const { logout } = useAuth0();
   return (
     <Button color="inherit" onClick={() => logout({ returnTo: window.location.origin })}>
-      <span className="iconL"><LogoutOutlined /></span>Log Out
+      Log Out
     </Button>
   );
 };
@@ -81,14 +81,14 @@ function Bar(props) {
   // console.log(user)
   return (
     <div className={classes.root}>
-      <video className="video" src={Video} loop autoPlay="true" muted />
+      <video className="video" src={Video} loop autoPlay={true} muted />
       {isAuthenticated && <div className="modal2"></div>}
       <AppBar position="fixed">
         <Toolbar>
           <IconButton edge="start" className={classes.menuButton}
-            color="inherit" aria-label="menu"
+            color="inherit" aria-label="menu"  onClick={() => setIsMenu(!isMenu)}
           >
-            <MenuSharpIcon onClick={() => setIsMenu(!isMenu)} />
+            <MenuSharpIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
             News
