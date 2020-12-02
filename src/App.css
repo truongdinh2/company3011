@@ -166,3 +166,14 @@ color: red !important;
   height: 100px;
   padding-top:  40px;
 }
+.isLg{
+  /* color: white !important; */
+  font-size: 24px;
+  font-weight: 600;
+  animation-name: example;
+  animation-duration: 4s;
+}
+@keyframes example {
+  from {color: white;}
+  to {color: yellow;}
+}

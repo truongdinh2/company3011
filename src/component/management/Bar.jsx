@@ -67,18 +67,16 @@ function Bar(props) {
     setOpen(false);
     setUsers(null)
   }
-  console.log(isEdit, 'isedit')
+  // console.log(isEdit, 'isedit')
   const onDelete = () => {
     setIsEdit(!isEdit)
   }
   const valSearch = (key) => {
-    setValueSearch(key)
+    setValueSearch(key);
   }
   if (isLoading) {
     return <div>Loading ...</div>
   }
-  // console.log(isAuthenticated)
-  // console.log(user)
   return (
     <div className={classes.root}>
       <video className="video" src={Video} loop autoPlay={true} muted />
@@ -110,16 +108,19 @@ function Bar(props) {
           </Col>
           <Col md={20} xm={18}>
             <Row >
-              <h1 className="titlte" style={{ margin: "auto" }}>Welcome
-                  <span >
-                  🐪🐪🐪  {isAuthenticated && user.family_name}😀👆️😧🖤❣️️🎧
-                  </span>
-              </h1>
+              <Col offset={6}>
+                {isAuthenticated ? <h1 className="titlte" >Welcome
+                    <span >
+                      {"🐪🐪🐪" + user.family_name + '😀👆️😧🖤❣️️🎧'}
+                    </span>
+                </h1>:<h1  className="titlte">lOGIN để biết thêm chi tiết</h1>}
+              </Col>
             </Row>
             <Row>
               <Col md={18}>
                 <div style={{ height: '100px' }}>
-                  {isAuthenticated && <Seacrch valSearch={valSearch} />}
+                  {isAuthenticated ? <Seacrch valSearch={valSearch}/> : 
+                 ''}
                 </div>
                 {open && <div className="diolog">
                   <Diaolog checkData={checkData}
@@ -130,20 +131,17 @@ function Bar(props) {
                 {isMenu && <div className="modal" onClick={() => { setIsMenu(!isMenu) }}></div>}
               </Col>
               <Col md={6} >
-                {isAuthenticated && <Button className="button__add" variant="contained"
+                {isAuthenticated ? <Button className="button__add" variant="contained"
                   onClick={() => { setOpen(!open); setCheckEdit(true) }}>
                   Add employer
-             </Button>}
+             </Button>: ''}
               </Col>
             </Row>
             <Row className="height">
-              {/* <Col span={4} >
-              </Col> */}
               <Col span={21} >
                 {isAuthenticated && <Home isEdit={isEdit} idVal={idVal}
                   onDelete={onDelete}
                   valueSearch={valueSearch}
-                // getIdDel={getIdDel}
                 />}
               </Col>
               <Col span={3} >
@@ -151,10 +149,7 @@ function Bar(props) {
             </Row>
           </Col>
         </Row>
-        
-        {/* <Row style={{height:'100px'}}>
 
-        </Row> */}
       </div>
     </div>
   );

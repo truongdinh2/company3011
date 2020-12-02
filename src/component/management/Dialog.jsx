@@ -32,7 +32,6 @@ const Diaolog = (props) => {
 
   });
   const onFinish = async values => {
-    console.log(userEdits)
     if (!userEdits) {
       fetch("https://5fbb65b4c09c200016d406f6.mockapi.io/info", {
         method: "POST",

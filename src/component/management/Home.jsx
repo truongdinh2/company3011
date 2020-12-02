@@ -87,7 +87,7 @@ export default function CustomPaginationActionsTable(props) {
   };
   useEffect(() => {
     setValueSearch(strKey)
-  },[])
+  },[strKey])
   useEffect(() => {
     axios.get('https://5fbb65b4c09c200016d406f6.mockapi.io/info').then(res => {
       // console.log(res.data)
@@ -97,7 +97,6 @@ export default function CustomPaginationActionsTable(props) {
     }).catch(err => {
       console.log(err)
     })
-    console.log('GetData')
   }, [props.isEdit])
   const rows = users.sort((a, b) => (a.calories < b.calories ? -1 : 1));
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
@@ -140,7 +139,6 @@ export default function CustomPaginationActionsTable(props) {
   });
   function confirm(id) {
     message.info('Clicked on Yes.');
-    console.log(id)
     handleDelete(id)
   }
   return (
