@@ -81,7 +81,8 @@ const Diaolog = (props) => {
         label="Age" rules={[{ type: 'number', min: 0, max: 99 }, { required: true }]}>
         <InputNumber />
       </Form.Item>
-      <Form.Item name={['user', 'website']} label="Website" rules={[{ required: true }]}>
+      <Form.Item name={['user', 'website']} label="Website" rules={[{ required: true }]}
+      rules={[{type: 'url'}]} >
         <Input />
       </Form.Item>
       <Form.Item name={['user', 'introduction']} label="Introduction" rules={[{ required: true }]}>

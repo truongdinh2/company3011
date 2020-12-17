@@ -77,7 +77,6 @@ export default function CustomPaginationActionsTable(props) {
   // arrKey.slice()
   const pageNumber = Math.ceil(arrKey.length / numberPerPage);
   useEffect(() => {
-    console.log(pageNumber);
     var arrNumber = [];
     for (var i = 1; i <= pageNumber; i++) {
       // console.log(i, 'index');
@@ -90,30 +89,15 @@ export default function CustomPaginationActionsTable(props) {
 
 
 
-  console.log(numberCrrUp)
   const lastArrNum = numberCurrent * numberPerPage;
   const beginArrNum = lastArrNum - numberPerPage;
   // console.log(lastArrNum, beginArrNum)
   const data3 = arrKey.slice(beginArrNum, lastArrNum);
-  console.log(data3)
-  // const classNum = (number !== numberCurrent) ? 'pageNum ' : 'pageNum'
-  // const Number = arrNumberp.map(number => {
-  //   return (
-  //     <span
-  //       className={}
-  //       style={{ cursor: 'pointer' }}
-  //       onClick={handlePageChange}
-  //       key={number}
-  //       id={number}
-  //     >
-  //       {number}
-  //       {/* console.log(number) */}
-  //     </span>
+  const isPrivous = ( numberCurrent <= 1 ) ? true : false;
+  const isNext = (pageNumber === numberCurrent|| numberCurrent >=  pageNumber) ? true : false;
 
-  //   )
-  // })
   return (
-    <>
+    <div className="container1">
       <table >
         <thead>
           <tr>
@@ -164,6 +148,15 @@ export default function CustomPaginationActionsTable(props) {
         </tfoot>
       </table>
       <div className="divPageNum">
+        <span 
+        // aria-disabled={numberCurrent === 1}
+        >
+          <input
+          type="button" disabled={isPrivous}
+          onClick={()=>{setNumberCurrent(numberCurrent - 1)}}
+          value="privous"
+          ></input>
+        </span>
         {/* {Number} */}
         <span
           className='allPage '
@@ -187,7 +180,7 @@ export default function CustomPaginationActionsTable(props) {
           {numberCurrent}
         </span>
         {
-          pageNumber < numberCrrUp ? '' : 
+          (pageNumber < numberCrrUp ) ? '' : 
         <span
           className='pageNum'
           style={{ cursor: 'pointer' }}
@@ -197,8 +190,15 @@ export default function CustomPaginationActionsTable(props) {
           {numberCrrUp}
         </span>
         }
+        <span
+        onClick={()=>{ setNumberCurrent(numberCurrent - -1)}}
+        >
+          <input type="button" disabled={isNext || numberCurrent >= pageNumber}
+          value="next"
+          ></input>
+        </span>
       </div>
 
-    </>
+    </div>
   );
 }
