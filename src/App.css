@@ -1,27 +1,36 @@
 body{ 
   margin: 0px; padding: 0px!important;
   font-family:Constantia, "Lucida Bright", "DejaVu Serif", Georgia, "serif"!important; 
-  /* background-color: #42455a!important; */
+  background-color: #c8f0fa!important;
   /* color: white!important; */
 }
 table {
   border-collapse: collapse;
-  width: 100%;
-  font-size: 20px;
+  width: 70%;
+  font-size: 1em;
   color: white;
+  margin: 0 auto;
+  background-color: rgb(233, 203, 203);
 }
-
 th, td {
-  padding: 18px;
+  padding: 1%;
   text-align: left;
   color:whitesmoke;
   border-bottom: 1px solid #444444;
 }
 td{
+  color: #444444;
+}
+th{
+  background-color: #222;
+}
+tr:hover {
+  background-color: yellowgreen;
+  color: #444444 !important;
+} 
+tr:hover td{
   color: white;
 }
-
-tr:hover {background-color:#666;}
 .modal{
   width: 100%;
   height: 100%;
@@ -38,13 +47,13 @@ tr:hover {background-color:#666;}
   padding: 40px ;
   height: 410px;
   position: absolute;
-  padding-right: 130px;
+  padding-right: 120px;
   margin: auto;
-  top: 0px;
-  left: 200px;
+  top: 25%;
+  left: 30%;
   z-index: 10!important;
   background-color: white;
-  width: 500px;
+  width: 450px;
   border-radius: 40px 20px;
 }
 .btn{
@@ -52,36 +61,17 @@ tr:hover {background-color:#666;}
   margin-left: 40px!important;
 }
 .sider{
-  /* border: 1px solid black; */
   height: 400px;
   margin-top: 100px;
   z-index: 10;
   padding: 10px;
   background-color: white;
   position: absolute;
-  width: 100%;
+  width: 40%;
   background: linear-gradient( to top, #db1bf6,#19d7f8);
   box-shadow: 0 10px 8px 0 rgba(7, 38, 78, 0.171), 1px 6px 20px 0 rgba(163, 16, 97, 0.19);
 }
-.video{
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: -2;
-  object-fit: cover;
-  width: 100%;
-  height: 115%;
-}
-/* .login{
-  color: #fff!important;
-  border: 3px solid transparent!important;
-  border-radius: 20px!important;
-  background-image: linear-gradient(#42455a,#42455a) ,radial-gradient(circle at top left, #fd00da, #19d7f8)!important;
-  background-origin: border-box!important;
-  background-clip: content-box, border-box!important;
-  color: #B2B1B1;
-  float: right;
-} */
+
 .modal2{
   width: 100%;
   height: 100%;
@@ -100,7 +90,6 @@ tr:hover {background-color:#666;}
   font-weight: 600;
   height: 50px;
   width: 200px;
-
   border:none;
   outline: none;
   border-radius: 10px;
@@ -126,6 +115,55 @@ h1{
 padding-left: 20px !important;
 color: red !important;
 }
+.flexbox{
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+  width: 70%;
+  margin: auto;
+}
+.flex_item{
+  
+}
+.divPageNum{
+
+  /* border: 1px solid black; */
+  width: 100px;
+  /* margin-left: 75%; */
+  display: flex;
+  flex-flow: wrap row;
+  width: 70%;
+  justify-content: flex-end;
+  margin: auto;
+  background-color: white;
+}
+.pageNum{
+  margin:0.3% 1%;
+  /* border: 1px solid black; */
+padding: 0.5% 1.3%;
+font-size: 16px;
+border-radius: 50%;
+}
+.pageNum:hover{
+  color: red;
+  font-size: 18px;
+  font-weight: 500;
+  background-color: wheat;
+  border: 2px dotted pink;
+}
+.pageCrr{
+  color: red;
+  font-size: 18px;
+  font-weight: 500;
+  background-color: wheat;
+  border: 2px dotted pink;
+}
+.allPage{
+  margin:0.3% 1%;
+padding: 0.5% 1.3%;
+font-size: 16px;
+border-radius: 50%;
+}
 @media only screen and (min-width: 1300px) {
   h1{
     margin-top: 50px !important;
@@ -134,7 +172,7 @@ color: red !important;
     color:white !important;
   }
   .diolog{
-    left: 480px;
+    left: 40%
   }
   tr:hover {background-color:#999;}
   table {
@@ -142,6 +180,7 @@ color: red !important;
   }
   .sider{
     height: 350px;
+    width: 20%;
     margin-top: 200px;
     padding-left: 20px;
     padding-top: 20px;
@@ -173,6 +212,7 @@ color: red !important;
   animation-name: example;
   animation-duration: 4s;
 }
+
 @keyframes example {
   from {color: white;}
   to {color: yellow;}

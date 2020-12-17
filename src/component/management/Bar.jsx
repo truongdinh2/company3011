@@ -1,15 +1,12 @@
+// import Sider from './Sider';
+import { useAuth0 } from "@auth0/auth0-react";
 import { AppBar, Button, IconButton, makeStyles, Toolbar, Typography } from '@material-ui/core';
 import MenuSharpIcon from '@material-ui/icons/MenuSharp';
-import { Col, Row } from 'antd';
 import React, { useState } from 'react';
-// import Video from '../'
-import Video from '../video/video.mp4';
 import Diaolog from './Dialog';
 import Home from './Home';
 import Seacrch from './Seacrch';
-// import Sider from './Sider';
-import { useAuth0 } from "@auth0/auth0-react";
-import LoginOutlined, { LogoutOutlined } from "@ant-design/icons";
+// import LoginOutlined, { LogoutOutlined } from "@ant-design/icons";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -67,7 +64,6 @@ function Bar(props) {
     setOpen(false);
     setUsers(null)
   }
-  // console.log(isEdit, 'isedit')
   const onDelete = () => {
     setIsEdit(!isEdit)
   }
@@ -79,77 +75,76 @@ function Bar(props) {
   }
   return (
     <div className={classes.root}>
-      <video className="video" src={Video} loop autoPlay={true} muted />
       {isAuthenticated && <div className="modal2"></div>}
       <AppBar position="fixed">
         <Toolbar>
           <IconButton edge="start" className={classes.menuButton}
-            color="inherit" aria-label="menu"  onClick={() => setIsMenu(!isMenu)}
+            color="inherit" aria-label="menu" onClick={() => setIsMenu(!isMenu)}
           >
             <MenuSharpIcon />
           </IconButton>
-          <Typography variant="h6" className={classes.title}>
-            News
+          <Typography variant="h6" style={{ color: "white" }} className={classes.title}>
+            Admin
           </Typography>
           {isAuthenticated ? <LogoutButton /> : <LoginButton />}
         </Toolbar>
       </AppBar>
 
+      {open && <div className="modal" onClick={() => { setOpen(!open) }}></div>}
+      {isMenu && <div className="modal" onClick={() => { setIsMenu(!isMenu) }}></div>}
       <div style={{ marginTop: '100px' }}>
-        <Row>
-          <Col md={4} xm={6}>
+        <div>
+          <div md={4} xm={6}>
             {isMenu && isAuthenticated ? <div className="sider">
               <h2>infor của bạn đã bị hack </h2>
-              <p>tên bạn là: {user.family_name} 🐶</p>
-              <p>họ bạn là: {user.given_name}</p>
+              <p>tên bạn là: {user.given_name} 🐶</p>
+              <p>họ bạn là: {user.family_name}</p>
               <p>quốc gia bạn là: {user.locale === 'vi' ? "Việt Nam  :))" : ''}</p>
               <p>ảnh bạn là:  <img src={user.picture} alt="pic" /></p>
             </div> : ''}
-          </Col>
-          <Col md={20} xm={18}>
-            <Row >
-              <Col offset={6}>
+          </div>
+          <div md={20} xm={18}>
+            <div >
+              <div offset={6}>
                 {isAuthenticated ? <h1 className="titlte" >Welcome
                     <span >
-                      {"🐪🐪🐪" + user.family_name + '😀👆️😧🖤❣️️🎧'}
-                    </span>
-                </h1>:<h1  className="titlte">lOGIN để biết thêm chi tiết</h1>}
-              </Col>
-            </Row>
-            <Row>
-              <Col md={18}>
-                <div style={{ height: '100px' }}>
-                  {isAuthenticated ? <Seacrch valSearch={valSearch}/> : 
-                 ''}
+                    {' ' + user.given_name + ''}
+                  </span>
+                </h1> : <h1 className="titlte">Login please</h1>}
+              </div>
+            </div>
+            <div>
+              <div className="flexbox">
+                <div className="flex_item item1" style={{ height: '100px' }}>
+                  {isAuthenticated ? <Seacrch valSearch={valSearch} /> :
+                    ''}
                 </div>
-                {open && <div className="diolog">
-                  <Diaolog checkData={checkData}
-                    users={users} checkEdit={checkEdit}
-                    getSave={getSave} />
-                </div>}
-                {open && <div className="modal" onClick={() => { setOpen(!open) }}></div>}
-                {isMenu && <div className="modal" onClick={() => { setIsMenu(!isMenu) }}></div>}
-              </Col>
-              <Col md={6} >
-                {isAuthenticated ? <Button className="button__add" variant="contained"
-                  onClick={() => { setOpen(!open); setCheckEdit(true) }}>
-                  Add employer
-             </Button>: ''}
-              </Col>
-            </Row>
-            <Row className="height">
-              <Col span={21} >
+                <div className="flex_item item2" >
+                  {isAuthenticated ?
+                    <Button className="button__add" variant="contained" color="secondary"
+                      onClick={() => { setOpen(!open); setCheckEdit(true) }}>
+                      Add 
+                    </Button> : ''}
+                </div>
+              </div>
+            </div>
+            <div className="height">
+              <div >
                 {isAuthenticated && <Home isEdit={isEdit} idVal={idVal}
                   onDelete={onDelete}
                   valueSearch={valueSearch}
                 />}
-              </Col>
-              <Col span={3} >
-              </Col>
-            </Row>
-          </Col>
-        </Row>
-
+              </div>
+              <div  >
+              </div>
+              {open && <div className="diolog">
+                <Diaolog checkData={checkData}
+                  users={users} checkEdit={checkEdit}
+                  getSave={getSave} />
+              </div>}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
