@@ -6,23 +6,20 @@ import React, { useEffect, useState } from 'react';
 
 export default function CustomPaginationActionsTable(props) {
   const strKey = props.valueSearch;
-  const arrKey = []
+  var arrKey = [];
   const [valueSearch, setValueSearch] = useState('');
   const [users, setUsers] = useState([]);
+  const [sortData, setSortData] = useState(users)
   const text = 'Are you sure to delete this task?';
   const success = () => {
     message.success('deleted sucessfully');
   };
-  // const [numberBegin,setNumberBegin] = useState(1);
-  // const [numberData, setNumberData] = useState(5);
-  const [arrNumberp, setArrNumberP] = useState([1])
   const [numberCurrent, setNumberCurrent] = useState(1);
-  const numberPerPage = 5;
-  // const [isCurrentNum, setIsCurrentNum] = useState(false);
+  const [numberPerPage, setNumberPerPage] = useState(5);
   const numberCrrUp = numberCurrent - -1;
   const numberCrrDown = numberCurrent - 1;
+  const [sortNotice, setSortNotice] = useState('sort')
 
-  // var number
 
   useEffect(() => {
     setValueSearch(strKey)
@@ -36,11 +33,13 @@ export default function CustomPaginationActionsTable(props) {
       console.log(err)
     })
   }, [props.isEdit])
-  const rows = users.sort((a, b) => (a.calories < b.calories ? -1 : 1));
-
+  useEffect(() => {
+    if (data3.length === 0) {
+      setNumberCurrent(pageNumber)
+    }
+  }, [numberPerPage])
   const handleEdit = (row) => {
     props.idVal(row)
-
   }
   const handleDelete = async id => {
     fetch(`https://5fbb65b4c09c200016d406f6.mockapi.io/info/${id}`, {
@@ -53,67 +52,61 @@ export default function CustomPaginationActionsTable(props) {
       success()
     });
   }
-  rows.map((key) => {
+  const handleSort = () => {
+    var sort1 = users.sort((a, b) => {
+      var x = a.name.toLowerCase();
+      var y = b.name.toLowerCase();
+      if (x < y) { return -1 }
+      if (x > y) { return 1 }
+      return 0;
+    })
+    setSortData(sort1);
+    setSortNotice('SORTED')
+  }
+  (sortData !== [] ? users : sortData).map((key) => {
     var index;
     index = key.name.toLowerCase().indexOf(valueSearch);
     if (index !== -1) {
       arrKey.push(key)
     }
     return arrKey;
-  });
+  }
+  );
   function confirm(id) {
     message.info('Clicked on Yes.');
     handleDelete(id)
   }
   const handlePageChange = (event) => {
-    console.log(event.target)
     setNumberCurrent(event.target.id)
-    // const toNumberEnd = num
-
   }
-  // window.alert(numberCurrent)
-  //
-  // console.log(arrKey.length);
-  // arrKey.slice()
   const pageNumber = Math.ceil(arrKey.length / numberPerPage);
-  useEffect(() => {
-    var arrNumber = [];
-    for (var i = 1; i <= pageNumber; i++) {
-      // console.log(i, 'index');
-      arrNumber.push(i)
-      // var arr
-    }
-    setArrNumberP(arrNumber)
-    // console.log(arrNumber)
-  }, [users])
-
-
-
   const lastArrNum = numberCurrent * numberPerPage;
   const beginArrNum = lastArrNum - numberPerPage;
-  // console.log(lastArrNum, beginArrNum)
   const data3 = arrKey.slice(beginArrNum, lastArrNum);
-  const isPrivous = ( numberCurrent <= 1 ) ? true : false;
-  const isNext = (pageNumber === numberCurrent|| numberCurrent >=  pageNumber) ? true : false;
-
+  const isPrivous = (numberCurrent <= 1) ? true : false;
+  const isNext = (pageNumber === numberCurrent || numberCurrent >= pageNumber) ? true : false;
+  // console.log(data3, 'data3', [], data3 === []);
+  // const is = data3.length === 0 ? true : false;
+  // console.log(is)
+  console.log(numberCurrent + 1)
   return (
     <div className="container1">
       <table >
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Age</th>
-            <th>Email</th>
-            <th>Website</th>
-            <th>Introduction</th>
-            <th>Action</th>
+            <th style={{ width: '16%' }}>Name</th>
+            <th style={{ width: '5%' }}>Age</th>
+            <th style={{ width: '20%' }}>Email</th>
+            <th style={{ width: '25%' }}>Website</th>
+            <th style={{ width: '34%' }}>Introduction</th>
+            <th style={{ width: '10%' }}>Action</th>
           </tr>
         </thead>
         <tbody>
           {(
             data3
-          ).map((row) => (
-            <tr key={row.name}>
+          ).map((row, index) => (
+            <tr key={index}>
               <td component="th" >
                 {row.name}
               </td>
@@ -148,20 +141,35 @@ export default function CustomPaginationActionsTable(props) {
         </tfoot>
       </table>
       <div className="divPageNum">
-        <span 
-        // aria-disabled={numberCurrent === 1}
-        >
-          <input
-          type="button" disabled={isPrivous}
-          onClick={()=>{setNumberCurrent(numberCurrent - 1)}}
-          value="privous"
-          ></input>
+        <span className="sort">
+          <button onClick={handleSort}>
+            {sortNotice}
+          </button>
         </span>
         {/* {Number} */}
         <span
           className='allPage '
         >
           All page: {arrKey.length}
+        </span>
+        <span
+          className='allPage '
+        >
+          <label >number per pages: </label>
+          <select onChange={(e) => setNumberPerPage(e.target.value)}>
+            <option value={1} >1</option>
+            <option value={5} >5</option>
+            <option value={10} >10</option>
+            <option value={15} >15</option>
+          </select>
+        </span>
+        <span
+        >
+          <input
+            type="button" disabled={isPrivous}
+            onClick={() => { setNumberCurrent(numberCurrent - 1) }}
+            value="privous"
+          ></input>
         </span>
         {numberCrrDown === 0 ? '' : <span
           className={'pageNum'}
@@ -180,21 +188,21 @@ export default function CustomPaginationActionsTable(props) {
           {numberCurrent}
         </span>
         {
-          (pageNumber < numberCrrUp ) ? '' : 
-        <span
-          className='pageNum'
-          style={{ cursor: 'pointer' }}
-          onClick={handlePageChange}
-          id={numberCrrUp}
-        >
-          {numberCrrUp}
-        </span>
+          (pageNumber < numberCrrUp) ? '' :
+            <span
+              className='pageNum'
+              style={{ cursor: 'pointer' }}
+              onClick={handlePageChange}
+              id={numberCrrUp}
+            >
+              {numberCrrUp}
+            </span>
         }
         <span
-        onClick={()=>{ setNumberCurrent(numberCurrent - -1)}}
         >
           <input type="button" disabled={isNext || numberCurrent >= pageNumber}
-          value="next"
+            onClick={() => { setNumberCurrent( numberCurrent + 1) }}
+            value="next"
           ></input>
         </span>
       </div>
