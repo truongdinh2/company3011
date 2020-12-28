@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 
 export default function CustomPaginationActionsTable(props) {
   const strKey = props.valueSearch;
-  var arrKey = [];
+  const [arrKey, setArrKey] = useState([]);
   const [valueSearch, setValueSearch] = useState('');
   const [users, setUsers] = useState([]);
   const [sortData, setSortData] = useState(users)
@@ -19,8 +19,12 @@ export default function CustomPaginationActionsTable(props) {
   const numberCrrUp = numberCurrent - -1;
   const numberCrrDown = numberCurrent - 1;
   const [sortNotice, setSortNotice] = useState('sort')
-
-
+  const pageNumber = Math.ceil(arrKey.length / numberPerPage);
+  const lastArrNum = numberCurrent * numberPerPage;
+  const beginArrNum = lastArrNum - numberPerPage;
+  const data3 = arrKey.slice(beginArrNum, lastArrNum);
+  const isPrivous = (numberCurrent <= 1) ? true : false;
+  const isNext = (pageNumber === numberCurrent || numberCurrent >= pageNumber) ? true : false;
   useEffect(() => {
     setValueSearch(strKey)
   }, [strKey])
@@ -32,13 +36,28 @@ export default function CustomPaginationActionsTable(props) {
     }).catch(err => {
       console.log(err)
     })
-  }, [props.isEdit])
+  }, [props.isEdit]);
+  useEffect(() => {
+    var arrkey1 = [];
+    // console.log(sortData === [] )
+    (sortData !== [] ? users : sortData).map((key) => {
+      var index;
+      index = key.name.toLowerCase().indexOf(valueSearch);
+      if (index !== -1) {
+        arrkey1.push(key);
+      }
+      // console.log(arrkey1)
+      return arrkey1;
+    }
+    );
+    setArrKey(arrkey1);
+  }, [users,valueSearch,sortData])
   useEffect(() => {
     if (data3.length === 0) {
-      setNumberCurrent(pageNumber)
+      setNumberCurrent(1)
     }
-  }, [numberPerPage])
-  const handleEdit = (row) => {
+  }, [numberPerPage,data3])
+    const handleEdit = (row) => {
     props.idVal(row)
   }
   const handleDelete = async id => {
@@ -63,15 +82,7 @@ export default function CustomPaginationActionsTable(props) {
     setSortData(sort1);
     setSortNotice('SORTED')
   }
-  (sortData !== [] ? users : sortData).map((key) => {
-    var index;
-    index = key.name.toLowerCase().indexOf(valueSearch);
-    if (index !== -1) {
-      arrKey.push(key)
-    }
-    return arrKey;
-  }
-  );
+
   function confirm(id) {
     message.info('Clicked on Yes.');
     handleDelete(id)
@@ -79,16 +90,6 @@ export default function CustomPaginationActionsTable(props) {
   const handlePageChange = (event) => {
     setNumberCurrent(event.target.id)
   }
-  const pageNumber = Math.ceil(arrKey.length / numberPerPage);
-  const lastArrNum = numberCurrent * numberPerPage;
-  const beginArrNum = lastArrNum - numberPerPage;
-  const data3 = arrKey.slice(beginArrNum, lastArrNum);
-  const isPrivous = (numberCurrent <= 1) ? true : false;
-  const isNext = (pageNumber === numberCurrent || numberCurrent >= pageNumber) ? true : false;
-  // console.log(data3, 'data3', [], data3 === []);
-  // const is = data3.length === 0 ? true : false;
-  // console.log(is)
-  console.log(numberCurrent + 1)
   return (
     <div className="container1">
       <table >
@@ -103,9 +104,7 @@ export default function CustomPaginationActionsTable(props) {
           </tr>
         </thead>
         <tbody>
-          {(
-            data3
-          ).map((row, index) => (
+          {data3.map((row, index) => (
             <tr key={index}>
               <td component="th" >
                 {row.name}
@@ -201,7 +200,7 @@ export default function CustomPaginationActionsTable(props) {
         <span
         >
           <input type="button" disabled={isNext || numberCurrent >= pageNumber}
-            onClick={() => { setNumberCurrent( numberCurrent + 1) }}
+            onClick={() => { setNumberCurrent(numberCurrent + 1) }}
             value="next"
           ></input>
         </span>

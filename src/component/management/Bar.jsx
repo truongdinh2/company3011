@@ -1,4 +1,3 @@
-// import Sider from './Sider';
 import { useAuth0 } from "@auth0/auth0-react";
 import { AppBar, Button, IconButton, makeStyles, Toolbar, Typography } from '@material-ui/core';
 import MenuSharpIcon from '@material-ui/icons/MenuSharp';
@@ -6,9 +5,6 @@ import React, { useState } from 'react';
 import Diaolog from './Dialog';
 import Home from './Home';
 import Seacrch from './Seacrch';
-// import LoginOutlined, { LogoutOutlined } from "@ant-design/icons";
-
-
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -20,15 +16,12 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
 }));
-
-
 const LoginButton = () => {
   const { loginWithRedirect } = useAuth0();
 
   return (
     <Button color="inherit" onClick={() => loginWithRedirect()}>Log In</Button>);
 };
-
 const LogoutButton = () => {
   const { logout } = useAuth0();
   return (
@@ -37,12 +30,8 @@ const LogoutButton = () => {
     </Button>
   );
 };
-
 function Bar(props) {
   const { user, isAuthenticated, isLoading } = useAuth0();
-
-
-
   const classes = useStyles();
   const [isMenu, setIsMenu] = useState(false)
   const [valueSearch, setValueSearch] = useState('')
@@ -50,12 +39,10 @@ function Bar(props) {
   const [open, setOpen] = useState(false)
   const [isEdit, setIsEdit] = useState(false)
   const [users, setUsers] = useState(null)
-  // const [idDel, setIdDel] = useState(null)
   function checkData() {
     setIsEdit(!isEdit)
   }
   function idVal(row, users) {
-    // console.log(idValue,users)
     setUsers(row)
     setOpen(true)
     setCheckEdit(false)
