@@ -39,14 +39,12 @@ export default function CustomPaginationActionsTable(props) {
   }, [props.isEdit]);
   useEffect(() => {
     var arrkey1 = [];
-    // console.log(sortData === [] )
     (sortData !== [] ? users : sortData).map((key) => {
       var index;
       index = key.name.toLowerCase().indexOf(valueSearch);
       if (index !== -1) {
         arrkey1.push(key);
       }
-      // console.log(arrkey1)
       return arrkey1;
     }
     );
@@ -156,7 +154,6 @@ export default function CustomPaginationActionsTable(props) {
         >
           <label >number per pages: </label>
           <select onChange={(e) => setNumberPerPage(e.target.value)}>
-            <option value={1} >1</option>
             <option value={5} >5</option>
             <option value={10} >10</option>
             <option value={15} >15</option>
